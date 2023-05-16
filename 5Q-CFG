@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <string.h>
+
+// Define the CFG production rules
+void S(char input[]);
+
+// Define a function to check if a given string belongs to the language of the CFG
+int belongsToLanguage(char input[]) {
+  // Check if the input string matches the CFG production rules
+  if (strlen(input) == 0) {
+    return 1; // empty string is accepted
+  } else if (input[0] == '0' && input[strlen(input)-1] == '0') {
+    S(input); // check if the input string matches the S production rules
+    return 1;
+  }
+  return 0;
+}
+
+// Define the CFG production rules
+void S(char input[]) {
+  if (strlen(input) == 2) {
+    return; // stop condition for recursion
+  } else {
+    int i = 1;
+    while (i < strlen(input) - 1) {
+      if (input[0] == '0' && input[strlen(input)-1] == '0' && input[i] == '0') {
+        printf("S -> 0S0\n");
+        input[i] = 'S'; // replace '0' with 'S' to reduce the input string
+        S(input);
+        i++; // increment i after S() returns
+      } else if (input[i] == '1') {
+        printf("S -> A\n");
+        input[i] = 'A'; // replace '1' with 'A' to reduce the input string
+        S(input);
+        i++; // increment i after S() returns
+      } else {
+        return; // stop recursion if input[i] is not '0' or '1'
+      }
+    }
+  }
+}
+
+int main() {
+  // Get the input string from the user
+  char input[100];
+  printf("Enter an input string: ");
+  scanf("%s", input);
+
+  // Check if the input string belongs to the language of the CFG
+  if (belongsToLanguage(input)) {
+    printf("Accepted\n");
+  } else {
+    printf("Rejected\n");
+  }
+
+  return 0;
+}
